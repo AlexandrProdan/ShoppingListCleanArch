@@ -1,8 +1,8 @@
 package com.example.shappinglistcleanarch1.domain
 
 data class ShopItem(
-    val count: Int,
     val name: String,
+    val count: Int,
     val enabled: Boolean,
     var id: Int = UNDEFINED_ID
 ){
