@@ -1,5 +1,7 @@
 package com.example.shappinglistcleanarch1.domain
 
+import androidx.lifecycle.LiveData
+
 interface ShopListRepository {
 
     fun addShoppingItem(shopItem: ShopItem)
@@ -10,5 +12,5 @@ interface ShopListRepository {
 
     fun getShopItemById(shopItemId: Int): ShopItem
 
-    fun getShoppingItemList(): List<ShopItem>
+    fun getShoppingItemList(): LiveData<List<ShopItem>>
 }

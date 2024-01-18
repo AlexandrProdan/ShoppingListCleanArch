@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShappingListCleanArch1</string>
+    <string name="add_new_shop_item">Add new shop item</string>
 </resources>

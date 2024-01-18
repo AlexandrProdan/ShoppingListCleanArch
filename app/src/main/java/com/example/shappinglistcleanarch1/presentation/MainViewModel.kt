@@ -1,6 +1,5 @@
 package com.example.shappinglistcleanarch1.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shappinglistcleanarch1.data.ShopListRepoImp
 import com.example.shappinglistcleanarch1.domain.DeleteShopItemUseCase
@@ -15,21 +14,16 @@ class MainViewModel : ViewModel() {
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repo)
     private val editShopItemUseCase = EditShopItemUseCase(repo)
 
-    val shopListLD = MutableLiveData<List<ShopItem>>()
+    val shopListLD = getShopListUseCase.getShoppingItemList()
 
-    fun getShopList() {
-        val list = getShopListUseCase.getShoppingItemList()
-        shopListLD.postValue(list)
-    }
 
-    fun deleteShopIte(shopItem: ShopItem) {
+
+    fun deleteShopItem(shopItem: ShopItem) {
         deleteShopItemUseCase.deleteShopItem(shopItem)
-        getShopList()
     }
 
-    fun editShopItem(shopItem: ShopItem){
+    fun changeEnableState(shopItem: ShopItem){
         val newItem = shopItem.copy(enabled = !shopItem.enabled)
         editShopItemUseCase.editShopItem(newItem)
-        getShopList()
     }
 }
