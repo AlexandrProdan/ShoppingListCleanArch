@@ -4,23 +4,25 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import com.example.shappinglistcleanarch1.databinding.ActivityMainBinding
 import com.example.shappinglistcleanarch1.presentation.MainViewModel
+import com.example.shappinglistcleanarch1.presentation.ShopListAdapter
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private var count = 0
+    private lateinit var adapter: ShopListAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopListLD.observe(this) {
-            Log.d(TAG, it.toString())
-            if (count == 0) {
-                val item = it[0]
-                viewModel.changeEnableState(item)
-                count++
-            }
+            adapter.shopItemList = it
         }
 
     }
@@ -28,5 +30,11 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "TEST"
 
+    }
+
+    private fun setupRecyclerView() {
+        val recycleViewShopList = binding.rvShopList
+        val adapter = ShopListAdapter()
+        recycleViewShopList.adapter = adapter
     }
 }
