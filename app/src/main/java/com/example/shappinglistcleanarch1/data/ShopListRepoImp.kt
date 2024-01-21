@@ -12,8 +12,9 @@ object ShopListRepoImp : ShopListRepository {
     private var autoIncrementId = 0
 
     init {
-        for (i in 0..9) {
-            val item = ShopItem("Name $i", i, true)
+        for (i in 0..1000) {
+            val alphabet = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z "
+            val item = ShopItem("Name $i \n$alphabet \n$alphabet \n$alphabet ", i, true)
             addShoppingItem(item)
         }
 

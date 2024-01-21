@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val recycleViewShopList = binding.rvShopList
-        val adapter = ShopListAdapter()
+        adapter = ShopListAdapter()
         recycleViewShopList.adapter = adapter
     }
 }
