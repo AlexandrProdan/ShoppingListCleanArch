@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shappinglistcleanarch1.databinding.ItemShopDisabledBinding
 import com.example.shappinglistcleanarch1.databinding.ItemShopEnabledBinding
@@ -14,8 +15,10 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     private var countCreate = 1
     var shopItemList = listOf<ShopItem>()
         set(value) {
+            val callback = ShopListDiffCallback(shopItemList, value)
+            val diff = DiffUtil.calculateDiff(callback)
+            diff.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
