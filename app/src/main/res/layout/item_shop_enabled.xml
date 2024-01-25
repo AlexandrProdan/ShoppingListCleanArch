@@ -36,7 +36,7 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="@tools:sample/lorem/random" />
+            tools:text="@string/alphabet" />
 
 
     </LinearLayout>

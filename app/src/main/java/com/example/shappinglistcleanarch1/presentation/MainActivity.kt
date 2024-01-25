@@ -1,4 +1,4 @@
-package com.example.shappinglistcleanarch1
+package com.example.shappinglistcleanarch1.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shappinglistcleanarch1.databinding.ActivityMainBinding
-import com.example.shappinglistcleanarch1.presentation.MainViewModel
 import com.example.shappinglistcleanarch1.presentation.ShopListAdapter
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopListLD.observe(this) {
-            shopListAdapter.shopItemList = it
+            shopListAdapter.submitList(it)
         }
         setupRecyclerView()
 
@@ -67,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-               val item = shopListAdapter.shopItemList[viewHolder.adapterPosition]
+               val item = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteShopItem(item)
             }
         }
