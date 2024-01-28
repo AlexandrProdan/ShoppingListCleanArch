@@ -19,7 +19,7 @@ class ShopItemViewModel: ViewModel() {
     private val editShopItemUseCase = EditShopItemUseCase(repo)
 
     private val _errorInputName = MutableLiveData<Boolean>()
-    val inputNameError : LiveData<Boolean>
+    val errorInputName : LiveData<Boolean>
         get() = _errorInputName
 
     private val _errorInputCount = MutableLiveData<Boolean>()
@@ -77,7 +77,7 @@ class ShopItemViewModel: ViewModel() {
 
     private fun parseCount(inputCount: String?): Int{
         return  try {
-            inputCount?.toString()?.trim()?.toInt() ?: 0
+            inputCount?.toInt() ?: 0
         }catch (e: Exception){
             0
         }

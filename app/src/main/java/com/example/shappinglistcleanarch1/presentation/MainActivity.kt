@@ -1,13 +1,11 @@
 package com.example.shappinglistcleanarch1.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shappinglistcleanarch1.databinding.ActivityMainBinding
-import com.example.shappinglistcleanarch1.presentation.ShopListAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -25,11 +23,14 @@ class MainActivity : AppCompatActivity() {
         }
         setupRecyclerView()
 
+        binding.fabAddItem.setOnClickListener{
+            val intent = ShopItemActivity.newIntentAddMode(this)
+            startActivity(intent)
+        }
+
     }
 
-    companion object {
-        private const val TAG = "Main Activity"
-    }
+
 
     private fun setupRecyclerView() {
         val rvShopList = binding.rvShopList
@@ -48,7 +49,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         shopListAdapter.onShopItemLongClickListener = { viewModel.changeEnableState(it) }
-        shopListAdapter.onShopItemClickListener = { Log.d(TAG, "${it.toString()} ")}
+        shopListAdapter.onShopItemClickListener = {
+            val id  = it.id
+            val intent = ShopItemActivity.newIntentEditMode(this, id)
+            startActivity(intent)
+        }
         setupSwipeListener(rvShopList)
     }
 
