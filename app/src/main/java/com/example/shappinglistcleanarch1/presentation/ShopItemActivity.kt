@@ -12,24 +12,25 @@ import com.example.shappinglistcleanarch1.databinding.ActivityShopItemBinding
 import com.example.shappinglistcleanarch1.domain.ShopItem
 
 class ShopItemActivity : AppCompatActivity() {
-   private lateinit var binding: ActivityShopItemBinding
-//    private lateinit var viewModel: ShopItemViewModel
-//    private var shopItemId = ShopItem.UNDEFINED_ID
-//    private var screenMode = MODE_UNKNOWN
+    private lateinit var binding: ActivityShopItemBinding
+
+    //    private lateinit var viewModel: ShopItemViewModel
+    private var shopItemId = ShopItem.UNDEFINED_ID
+    private var screenMode = MODE_UNKNOWN
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShopItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        parseIntent()
+        parseIntent()
 //        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
-//        setCorrectScreenMode()
+        setCorrectScreenMode()
 //        observeViewModel()
 //        addInputChangeListeners()
     }
 
-//    private fun addInputChangeListeners(){
+    //    private fun addInputChangeListeners(){
 //        binding.editTextName.addTextChangedListener(object : TextWatcher {
 //            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 //
@@ -77,12 +78,16 @@ class ShopItemActivity : AppCompatActivity() {
 //        }
 //    }
 //
-//    private fun setCorrectScreenMode(){
-//        when (screenMode) {
-//            MODE_EDIT -> launchEditMode()
-//            MODE_ADD -> launchAddMode()
-//        }
-//    }
+    private fun setCorrectScreenMode(){
+        val fragment = when (screenMode) {
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItemFragment(shopItemId)
+            MODE_ADD -> ShopItemFragment.newInstanceAddItemFragment()
+            else -> throw RuntimeException("Unknown screen mode: $screenMode")
+        }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.shop_item_container, fragment)
+            .commit()
+    }
 //
 //    private fun launchEditMode() {
 //
@@ -110,29 +115,27 @@ class ShopItemActivity : AppCompatActivity() {
 //        }
 //    }
 //
-//    private fun parseIntent() {
-//
-//        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
-//            throw RuntimeException("Param screen mode missing")
-//        }
-//
-//        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
-//
-//        if ((mode == MODE_ADD) || (mode == MODE_EDIT)) {
-//            screenMode = mode
-//        } else {
-//            throw RuntimeException("Unknown screen mode: $mode")
-//        }
-//
-//        if (screenMode == MODE_EDIT) {
-//            if (!intent.hasExtra(EXTRA_SHOP_ITEM_ID)) {
-//                throw RuntimeException("Parameter SHOP_ITEM_ID is missing")
-//            }
-//            shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
-//        }
-//
-//
-//    }
+    private fun parseIntent() {
+
+        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
+            throw RuntimeException("Param screen mode missing")
+        }
+
+        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
+
+        if ((mode == MODE_ADD) || (mode == MODE_EDIT)) {
+            screenMode = mode
+        } else {
+            throw RuntimeException("Unknown screen mode: $mode")
+        }
+
+        if (screenMode == MODE_EDIT) {
+            if (!intent.hasExtra(EXTRA_SHOP_ITEM_ID)) {
+                throw RuntimeException("Parameter SHOP_ITEM_ID is missing")
+            }
+            shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
+        }
+    }
 
     companion object {
         private const val EXTRA_SCREEN_MODE = "extra_mode"
