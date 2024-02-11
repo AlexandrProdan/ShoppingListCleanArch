@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shappinglistcleanarch1.R
 import com.example.shappinglistcleanarch1.databinding.ActivityMainBinding
 import com.example.shappinglistcleanarch1.presentation.ShopListAdapter
 
@@ -24,12 +25,22 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.submitList(it)
         }
         setupRecyclerView()
-
+        setUpOnFABClickListener()
     }
 
-    companion object {
-        private const val TAG = "Main Activity"
-    }
+   private fun setUpOnFABClickListener(){
+       binding.fab.setOnClickListener(){
+           if (isOnePaneMode()){
+               intent = ShopItemActivity.newIntent(this)
+               startActivity(intent)
+           }else{
+               val fragment = ShopItemFragment.newInstanceAdd()
+               supportFragmentManager.beginTransaction()
+                   .add(R.id.fragmentContainerInMainActivity, fragment)
+                   .commit()
+           }
+       }
+   }
 
     private fun setupRecyclerView() {
         val rvShopList = binding.rvShopList
@@ -76,5 +87,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun isOnePaneMode():Boolean{
         return binding.fragmentContainerInMainActivity == null
+    }
+
+    companion object {
+        private const val TAG = "Main Activity"
     }
 }

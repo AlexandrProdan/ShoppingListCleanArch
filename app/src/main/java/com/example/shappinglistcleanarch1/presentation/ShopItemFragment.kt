@@ -69,10 +69,10 @@ class ShopItemFragment() : Fragment() {
 
 
     companion object{
-        private const val SCREEN_MODE = "SCREEN_MODE"
-        private const val MODE_EDIT = "MODE_EDIT"
-        private const val MODE_ADD = "MODE_ADD"
-        private const val SHOP_ITEM_ID = "SHOP_ITEM_ID"
+        const val SCREEN_MODE = "SCREEN_MODE"
+        const val MODE_EDIT = "MODE_EDIT"
+        const val MODE_ADD = "MODE_ADD"
+        const val SHOP_ITEM_ID = "SHOP_ITEM_ID"
 
         fun newInstanceAdd(): Fragment {
             return ShopItemFragment().apply {
