@@ -21,9 +21,22 @@ class ShopItemActivity : AppCompatActivity() {
     }
 
     companion object{
+        private const val SCREEN_MODE = "SCREEN_MODE"
+        private const val MODE_EDIT = "MODE_EDIT"
+        private const val MODE_ADD = "MODE_ADD"
+        private const val SHOP_ITEM_ID = "SHOP_ITEM_ID"
 
-        fun newIntent(context: Context): Intent {
-            return Intent(context, ShopItemActivity::class.java)
+        fun newIntentAdd(context: Context): Intent {
+            val intent = Intent(context, ShopItemActivity::class.java)
+            intent.putExtra(SCREEN_MODE, MODE_ADD)
+            return intent
+        }
+
+        fun newIntentEdit(context: Context, id: Int): Intent{
+            val intent = Intent(context, ShopItemActivity::class.java)
+            intent.putExtra(SCREEN_MODE, MODE_EDIT)
+            intent.putExtra(SHOP_ITEM_ID, id)
+            return intent
         }
     }
 }

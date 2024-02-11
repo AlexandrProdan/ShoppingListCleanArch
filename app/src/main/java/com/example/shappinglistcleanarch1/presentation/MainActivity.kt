@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
    private fun setUpOnFABClickListener(){
        binding.fab.setOnClickListener(){
            if (isOnePaneMode()){
-               intent = ShopItemActivity.newIntent(this)
+               intent = ShopItemActivity.newIntentAdd(this)
                startActivity(intent)
            }else{
                val fragment = ShopItemFragment.newInstanceAdd()
