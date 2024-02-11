@@ -11,11 +11,15 @@ class ShopItemFragment() : Fragment() {
 
     private lateinit var binding: ShopItemFragmentLayoutBinding
     private lateinit var viewModel: ShopItemViewModel
+    private lateinit var screenMode: String
+    private var shopItemId: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ShopItemViewModel()
+        shopItemId = arguments?.getInt(SHOP_ITEM_ID)
+        screenMode = arguments?.getString(SCREEN_MODE).toString()
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +36,28 @@ class ShopItemFragment() : Fragment() {
     }
 
     private fun setCorrectScreenMode() {
-        TODO()
+        when(screenMode){
+            MODE_EDIT-> launchInEditMode()
+            MODE_ADD-> launchInAddMode()
+        }
+    }
+
+    private fun launchInAddMode(){
+        binding.btnSave.setOnClickListener(){
+            val name = binding.editTextName.text.toString()// TODO parse name input
+            val count = binding.editTextCount.text.toString()//TODO parse count input
+            viewModel.addShopItem(name, count)
+        }
+    }
+
+    private fun launchInEditMode(){
+
+    }
+
+    private fun setFieldsValuesFromArgs(){
+
+        val theEditedShopItem = viewModel.getShopItemById(shopItemId)
+        binding.editTextName.text = theEditedShopItem.
     }
 
 
