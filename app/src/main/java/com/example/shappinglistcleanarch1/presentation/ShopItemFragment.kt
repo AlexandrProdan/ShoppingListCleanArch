@@ -5,15 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.shappinglistcleanarch1.databinding.ShopItemFragmentLayoutBinding
 
-class ShopItemFragment: Fragment()  {
+class ShopItemFragment() : Fragment() {
 
-
+    private lateinit var binding: ShopItemFragmentLayoutBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+        binding = ShopItemFragmentLayoutBinding.inflate(inflater, container, false)
+        return binding.root
     }
 }
