@@ -74,4 +74,7 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
+    private fun isOnePaneMode():Boolean{
+        return binding.fragmentContainerInMainActivity == null
+    }
 }

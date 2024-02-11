@@ -6,20 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.shappinglistcleanarch1.databinding.ShopItemFragmentLayoutBinding
+import com.example.shappinglistcleanarch1.domain.ShopItem
 
 class ShopItemFragment() : Fragment() {
 
     private lateinit var binding: ShopItemFragmentLayoutBinding
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var screenMode: String
-    private var shopItemId: Int = 0
+    private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ShopItemViewModel()
-        shopItemId = arguments?.getInt(SHOP_ITEM_ID)
-        screenMode = arguments?.getString(SCREEN_MODE).toString()
+
+        val args = requireArguments()
+        shopItemId = args.getInt(SHOP_ITEM_ID)
+        screenMode = args.getString(SCREEN_MODE).toString()
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,13 +54,17 @@ class ShopItemFragment() : Fragment() {
     }
 
     private fun launchInEditMode(){
+        setValuesFromMain()
 
     }
 
-    private fun setFieldsValuesFromArgs(){
+    private fun setValuesFromMain(){
+        viewModel.getShopItemById(shopItemId)
 
-        val theEditedShopItem = viewModel.getShopItemById(shopItemId)
-        binding.editTextName.text = theEditedShopItem.
+        viewModel.shopItemLD.observe(viewLifecycleOwner){
+            binding.editTextName.setText(it.name)
+            binding.editTextCount.setText(it.count)
+        }
     }
 
 

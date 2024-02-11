@@ -42,6 +42,7 @@
         />
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerInMainActivity"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintStart_toEndOf="@id/guidelineCenter"
