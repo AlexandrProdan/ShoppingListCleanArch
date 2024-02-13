@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.shappinglistcleanarch1.R
 import com.example.shappinglistcleanarch1.databinding.ShopItemFragmentLayoutBinding
 import com.example.shappinglistcleanarch1.domain.ShopItem
 
@@ -19,11 +20,15 @@ class ShopItemFragment() : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ShopItemViewModel()
+        setArguments()
+    }
 
+    private fun setArguments() {
         val args = requireArguments()
         shopItemId = args.getInt(SHOP_ITEM_ID)
         screenMode = args.getString(SCREEN_MODE).toString()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +41,7 @@ class ShopItemFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setCorrectScreenMode()
-
+        observeViewModel()
     }
 
     private fun setCorrectScreenMode() {
@@ -73,7 +78,29 @@ class ShopItemFragment() : Fragment() {
         }
     }
 
+    private fun observeViewModel(){
+        viewModel.errorInputCount.observe(viewLifecycleOwner){
+            val errorMessage = if (it){
+                getString(R.string.error_input_count)
+            }else{
+                null
+            }
+            binding.tilCount.error = errorMessage
+        }
 
+        viewModel.inputNameError.observe(viewLifecycleOwner){
+            val errorMessage = if (it){
+                getString(R.string.error_input_name)
+            }else{
+                null
+            }
+            binding.tilName.error = errorMessage
+        }
+
+        viewModel.shouldCloseScreen.observe(viewLifecycleOwner){
+            activity?.onBackPressedDispatcher?.onBackPressed()
+        }
+    }
 
     companion object{
         const val SCREEN_MODE = "SCREEN_MODE"

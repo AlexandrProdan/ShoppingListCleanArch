@@ -2,6 +2,8 @@
     <string name="app_name">ShappingListCleanArch1</string>
     <string name="add_new_shop_item">Add new shop item</string>
     <string name="alphabet">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</string>
+    <string name="error_input_count">Count input error</string>
+    <string name="error_input_name">Name input error</string>
     <string name="name">Name</string>
     <string name="count">Count</string>
     <string name="save">Save</string>
