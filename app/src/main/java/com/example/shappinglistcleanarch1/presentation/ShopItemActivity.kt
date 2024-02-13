@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.shappinglistcleanarch1.R
 import com.example.shappinglistcleanarch1.databinding.ActivityShopItemBinding
 import com.example.shappinglistcleanarch1.domain.ShopItem
 
@@ -16,26 +17,70 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShopItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        parseIntent()
+        setCorrectScreenMode()
 
     }
 
-    companion object{
-        private const val SCREEN_MODE = "SCREEN_MODE"
+    private fun setCorrectScreenMode() {
+        when (screenMode) {
+            ShopItemFragment.MODE_EDIT -> launchInEditMode()
+            ShopItemFragment.MODE_ADD -> launchInAddMode()
+        }
+    }
+
+    private fun launchInAddMode() {
+        val fragment = ShopItemFragment.newInstanceAdd()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragmentContainerInShopItemActivity, fragment)
+            .commit()
+    }
+
+    private fun launchInEditMode() {
+        val fragment = ShopItemFragment.newInstanceEdit(shopItemId)
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragmentContainerInShopItemActivity, fragment)
+            .commit()
+    }
+
+    private fun parseIntent() {
+
+        if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
+            throw RuntimeException("Param screen mode missing")
+        }
+
+        val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
+
+        if ((mode == MODE_ADD) || (mode == MODE_EDIT)) {
+            screenMode = mode
+        } else {
+            throw RuntimeException("Unknown screen mode: $mode")
+        }
+
+        if (screenMode == MODE_EDIT) {
+            if (!intent.hasExtra(EXTRA_SHOP_ITEM_ID)) {
+                throw RuntimeException("Parameter SHOP_ITEM_ID is missing")
+            }
+            shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
+        }
+    }
+
+    companion object {
+        private const val EXTRA_SCREEN_MODE = "SCREEN_MODE"
         private const val MODE_EDIT = "MODE_EDIT"
         private const val MODE_ADD = "MODE_ADD"
-        private const val SHOP_ITEM_ID = "SHOP_ITEM_ID"
+        private const val EXTRA_SHOP_ITEM_ID = "SHOP_ITEM_ID"
 
         fun newIntentAdd(context: Context): Intent {
             val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(SCREEN_MODE, MODE_ADD)
+            intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
             return intent
         }
 
-        fun newIntentEdit(context: Context, id: Int): Intent{
+        fun newIntentEdit(context: Context, id: Int): Intent {
             val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(SHOP_ITEM_ID, id)
+            intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
+            intent.putExtra(EXTRA_SHOP_ITEM_ID, id)
             return intent
         }
     }

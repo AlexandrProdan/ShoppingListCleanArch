@@ -36,6 +36,7 @@ class ShopItemFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setCorrectScreenMode()
+
     }
 
     private fun setCorrectScreenMode() {
@@ -47,14 +48,19 @@ class ShopItemFragment() : Fragment() {
 
     private fun launchInAddMode(){
         binding.btnSave.setOnClickListener(){
-            val name = binding.editTextName.text.toString()// TODO parse name input
-            val count = binding.editTextCount.text.toString()//TODO parse count input
+            val name = binding.editTextName.text.toString()
+            val count = binding.editTextCount.text.toString()
             viewModel.addShopItem(name, count)
         }
     }
 
     private fun launchInEditMode(){
         setValuesFromMain()
+        binding.btnSave.setOnClickListener(){
+            val newName = binding.editTextName.toString()
+            val newCount = binding.editTextCount.toString()
+            viewModel.editShopItem(newName, newCount)
+        }
 
     }
 
@@ -63,9 +69,10 @@ class ShopItemFragment() : Fragment() {
 
         viewModel.shopItemLD.observe(viewLifecycleOwner){
             binding.editTextName.setText(it.name)
-            binding.editTextCount.setText(it.count)
+            binding.editTextCount.setText(it.count.toString())
         }
     }
+
 
 
     companion object{
@@ -82,7 +89,7 @@ class ShopItemFragment() : Fragment() {
             }
         }
 
-        fun newInstanceAdd(shopItemId: Int): Fragment {
+        fun newInstanceEdit(shopItemId: Int): Fragment {
             return ShopItemFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_EDIT)

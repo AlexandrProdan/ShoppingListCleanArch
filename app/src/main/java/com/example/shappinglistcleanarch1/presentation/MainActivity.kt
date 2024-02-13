@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shappinglistcleanarch1.R
 import com.example.shappinglistcleanarch1.databinding.ActivityMainBinding
-import com.example.shappinglistcleanarch1.presentation.ShopListAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -36,7 +35,7 @@ class MainActivity : AppCompatActivity() {
            }else{
                val fragment = ShopItemFragment.newInstanceAdd()
                supportFragmentManager.beginTransaction()
-                   .add(R.id.fragmentContainerInMainActivity, fragment)
+                   .add(R.id.fragmentContainerInMainActivity, fragment)//will cause issues with navigation
                    .commit()
            }
        }
@@ -59,7 +58,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         shopListAdapter.onShopItemLongClickListener = { viewModel.changeEnableState(it) }
-        shopListAdapter.onShopItemClickListener = { Log.d(TAG, "${it.toString()} ")}
+        shopListAdapter.onShopItemClickListener = {
+            if (isOnePaneMode()){
+                intent = ShopItemActivity.newIntentEdit(this@MainActivity, it.id)
+                startActivity(intent)
+            }else{
+                val fragment = ShopItemFragment.newInstanceEdit(it.id)
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.fragmentContainerInMainActivity, fragment)
+                    .commit()
+            }
+
+        }
         setupSwipeListener(rvShopList)
     }
 
