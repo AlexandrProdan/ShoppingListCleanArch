@@ -2,14 +2,16 @@ package com.example.shappinglistcleanarch1.presentation
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shappinglistcleanarch1.R
 import com.example.shappinglistcleanarch1.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
@@ -27,19 +29,7 @@ class MainActivity : AppCompatActivity() {
         setUpOnFABClickListener()
     }
 
-   private fun setUpOnFABClickListener(){
-       binding.fab.setOnClickListener(){
-           if (isOnePaneMode()){
-               intent = ShopItemActivity.newIntentAdd(this)
-               startActivity(intent)
-           }else{
-               val fragment = ShopItemFragment.newInstanceAdd()
-               supportFragmentManager.beginTransaction()
-                   .add(R.id.fragmentContainerInMainActivity, fragment)//will cause issues with navigation
-                   .commit()
-           }
-       }
-   }
+
 
     private fun setupRecyclerView() {
         val rvShopList = binding.rvShopList
@@ -64,13 +54,35 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }else{
                 val fragment = ShopItemFragment.newInstanceEdit(it.id)
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.fragmentContainerInMainActivity, fragment)
-                    .commit()
+
+                launchFragment(fragment)
             }
 
         }
         setupSwipeListener(rvShopList)
+    }
+
+    private fun setUpOnFABClickListener(){
+        binding.fab.setOnClickListener(){
+            if (isOnePaneMode()){
+                intent = ShopItemActivity.newIntentAdd(this)
+                startActivity(intent)
+            }else{
+                val fragment = ShopItemFragment.newInstanceAdd()
+                launchFragment(fragment)
+            }
+        }
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragmentContainerInMainActivity,
+                fragment
+            )//will cause issues with navigation
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setupSwipeListener(recyclerView: RecyclerView){
@@ -101,5 +113,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "Main Activity"
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText( this@MainActivity,"Success Success in MainActivity", Toast.LENGTH_SHORT).show()
     }
 }

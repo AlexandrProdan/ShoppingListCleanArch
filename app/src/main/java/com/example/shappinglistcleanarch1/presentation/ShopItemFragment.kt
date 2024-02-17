@@ -1,6 +1,9 @@
 package com.example.shappinglistcleanarch1.presentation
 
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +17,18 @@ class ShopItemFragment() : Fragment() {
     private lateinit var binding: ShopItemFragmentLayoutBinding
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var screenMode: String
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener){
+            onEditingFinishedListener = (context as OnEditingFinishedListener)
+        }else{
+            throw RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +36,7 @@ class ShopItemFragment() : Fragment() {
         setArguments()
     }
 
-    private fun setArguments() {
-        val args = requireArguments()
-        shopItemId = args.getInt(SHOP_ITEM_ID)
-        screenMode = args.getString(SCREEN_MODE).toString()
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,8 +49,17 @@ class ShopItemFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setCorrectScreenMode()
+        if (savedInstanceState == null){
+            setCorrectScreenMode()
+        }
         observeViewModel()
+        addInputChangeListeners()
+    }
+
+    private fun setArguments() {
+        val args = requireArguments()
+        shopItemId = args.getInt(SHOP_ITEM_ID)
+        screenMode = args.getString(SCREEN_MODE).toString()
     }
 
     private fun setCorrectScreenMode() {
@@ -57,13 +75,14 @@ class ShopItemFragment() : Fragment() {
             val count = binding.editTextCount.text.toString()
             viewModel.addShopItem(name, count)
         }
+
     }
 
     private fun launchInEditMode(){
         setValuesFromMain()
         binding.btnSave.setOnClickListener(){
-            val newName = binding.editTextName.toString()
-            val newCount = binding.editTextCount.toString()
+            val newName = binding.editTextName.text.toString()
+            val newCount = binding.editTextCount.text.toString()
             viewModel.editShopItem(newName, newCount)
         }
 
@@ -98,8 +117,36 @@ class ShopItemFragment() : Fragment() {
         }
 
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner){
-            activity?.onBackPressedDispatcher?.onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
+    }
+
+    private fun addInputChangeListeners() {
+        binding.editTextName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputName()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+
+        })
+
+        binding.editTextCount.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputCount()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+
+        })
+    }
+
+    interface OnEditingFinishedListener{
+        fun onEditingFinished()
     }
 
     companion object{
@@ -108,7 +155,7 @@ class ShopItemFragment() : Fragment() {
         const val MODE_ADD = "MODE_ADD"
         const val SHOP_ITEM_ID = "SHOP_ITEM_ID"
 
-        fun newInstanceAdd(): Fragment {
+        fun newInstanceAdd(): ShopItemFragment {
             return ShopItemFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_ADD)
@@ -116,7 +163,7 @@ class ShopItemFragment() : Fragment() {
             }
         }
 
-        fun newInstanceEdit(shopItemId: Int): Fragment {
+        fun newInstanceEdit(shopItemId: Int): ShopItemFragment {
             return ShopItemFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_EDIT)
